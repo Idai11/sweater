@@ -1,0 +1,23 @@
+{
+  "name": "sweater",
+  "version": "1.0.0",
+  "description": "The back-end for our high-tech project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Idai11/sweater.git"
+  },
+  "author": "Idai Yaffe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Idai11/sweater/issues"
+  },
+  "homepage": "https://github.com/Idai11/sweater#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.11"
+  }
+}
