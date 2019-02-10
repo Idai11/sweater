@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({,
+const userSchema = new Schema({
     _id: {
         type: String
     },
@@ -28,6 +28,10 @@ const userSchema = new Schema({,
         required: true,
         minLength: 8,
         minLength: 24,
+    },
+    salt: {
+        type: String,
+        required: true
     }
 });
 

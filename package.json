@@ -4,7 +4,8 @@
   "description": "The back-end for our high-tech project",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "echo No!",
+    "start": "cls && node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/Idai11/sweater#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.11"
   }
