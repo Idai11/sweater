@@ -29,4 +29,18 @@ errors.emailTaken = (req, res) => {
     });
 }
 
+errors.loginFailed = (req, res) => {
+    res.status(401);
+    res.json({
+        "message": "Authentication failed"
+    });
+}
+
+errors.notFound = (req, res, name) => {
+    res.status(404);
+    res.json({
+        "message": `${name} not found`
+    });
+}
+
 module.exports = errors;
