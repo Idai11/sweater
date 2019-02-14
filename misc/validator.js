@@ -11,12 +11,12 @@ const validate = (req, res, callback) => {
     if (token) {
         tokenModel.findOne({"_id": token}, (err, token) => {
             if (err) {
-                errors.databaseError(req, res);
+                errors.databaseError(req, res, err);
             } else {
                 if (token) {
                     userModel.findOne({"_id": tokenData.sub}, (err, user) => {
                         if (err) {
-                            errors.databaseError(req, res);
+                            errors.databaseError(req, res, err);
                         } else {
                             if (user) {
                                 callback(user);

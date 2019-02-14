@@ -29,7 +29,7 @@ const tokensPost = (req, res) => {
 
     userModel.findOne({"email": email}, (err, user) => {
         if (err) {
-            errors.databaseError(req, res);
+            errors.databaseError(req, res, err);
         } else {
             if (user) {
                 givenPass = crypto.createHash("sha512").update(password + user.salt).digest("base64");
@@ -42,7 +42,7 @@ const tokensPost = (req, res) => {
 
                     newToken.save((err, token) => {
                         if (err) {
-                            errors.databaseError(req, res);
+                            errors.databaseError(req, res, err);
                         } else {
                             res.json(token);
                         }
@@ -63,7 +63,7 @@ const tokensDelete = (req, res) => {
     validator(req, res, user => {
         tokenModel.deleteOne({"_id": token}, err => {
             if (err) {
-                errors.databaseError(req, res);
+                errors.databaseError(req, res, err);
             } else {
                 res.status(204);
                 res.json();

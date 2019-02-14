@@ -1,3 +1,5 @@
+const config = require("../misc/config");
+
 const errors = {};
 
 errors.methodNotAllowed = (req, res) => {
@@ -7,7 +9,11 @@ errors.methodNotAllowed = (req, res) => {
     });
 }
 
-errors.databaseError = (req, res) => {
+errors.databaseError = (req, res, err) => {
+    if (config.debug) {
+        console.log(err);
+    }
+
     res.status(500);
     res.json({
         "message": "Database error"

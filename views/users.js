@@ -24,7 +24,7 @@ const users = (req, res) => {
 const getUsers = (req, res) => {
     userModel.find({}, (err, users) => {
         if (err) {
-            errors.databaseError(req, res);
+            errors.databaseError(req, res, err);
         } else {
             res.json(users.map(user => {
                 user = user.toObject();
