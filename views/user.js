@@ -16,6 +16,9 @@ const user = (req, res) => {
         case "PUT":
             userPut(req, res, userId);
             break;
+        case "DELETE":
+            userDelete(req, res, userId);
+            break;
         default:
             errors.methodNotAllowed(req, res);
     }
@@ -84,6 +87,38 @@ const userPut = (req, res, userId) => {
                                     // delete updated.password;
                                     // delete updated.salt;
                                     res.json(updated);
+                                }
+                            });
+                        } else {
+                            errors.unauthorized(req, res);
+                        }
+                    });
+                } else {
+                    errors.notFound(req, res, "User");
+                }
+            }
+        });
+    } catch {
+        errors.invalidArguments(req, res, ["userId"]);
+    }
+}
+
+const userDelete = (req, res, userId) => {
+    try {
+        const userObjId = objectId(userId);
+        userModel.findOne({"_id": userObjId}, (err, user) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                if (user) {
+                    validator(req, res, authUser => {
+                        if (authUser._id.equals(user._id)) {
+                            userModel.deleteOne({"_id": userObjId}, err => {
+                                if (err) {
+                                    errors.databaseError(req, res, err);
+                                } else {
+                                    res.status(204);
+                                    res.json();
                                 }
                             });
                         } else {
