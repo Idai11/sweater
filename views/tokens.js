@@ -2,6 +2,7 @@ const crypto = require("crypto");
 
 const errors = require("./errors");
 const tokenMaker = require("../misc/tokens");
+const validator = require("../misc/validator");
 
 const tokenModel = require("../models/Token.model");
 const userModel = require("../models/User.model");
@@ -58,41 +59,17 @@ const tokensPost = (req, res) => {
 
 const tokensDelete = (req, res) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
-    const tokenData = tokenMaker.eval(token);
 
-    if (token) {
-        tokenModel.findOne({"_id": token}, (err, token) => {
+    validator(req, res, user => {
+        tokenModel.deleteOne({"_id": token}, err => {
             if (err) {
                 errors.databaseError(req, res);
             } else {
-                if (token) {
-                    userModel.findOne({"_id": tokenData.sub}, (err, user) => {
-                        if (err) {
-                            errors.databaseError(req, res);
-                        } else {
-                            if (user) {
-                                tokenModel.deleteOne({"_id": token}, err => {
-                                    if (err) {
-                                        errors.databaseError(req, res);
-                                    } else {
-                                        res.status(204);
-                                        res.json();
-                                    }
-                                });
-                            } else {
-                                errors.loginFailed(req, res);
-                            }
-                        }
-                    });
-                } else {
-                    errors.loginFailed(req, res);
-                }
+                res.status(204);
+                res.json();
             }
-
         });
-    } else {
-        errors.loginFailed(req, res);
-    }
+    });
 }
 
 module.exports = tokens;
