@@ -41,7 +41,7 @@ const postUsers = (req, res) => {
     const lastName = req.body.lastName;
     const email = req.body.email;
     const salt = stringers.generateRandomString(5);
-    const password = req.body.password.length > 0 && typeof(req.body.password) == "string" ? crypto.createHash("sha512").update(req.body.password + salt).digest("base64") : "";
+    const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + salt).digest("base64") : "";
 
     var newUser = new userModel({
         firstName,

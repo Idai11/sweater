@@ -2,7 +2,7 @@ const crypto = require("crypto");
 
 const errors = require("./errors");
 const tokenMaker = require("../misc/tokens");
-const validator = require("../misc/validator");
+const validator = require("../misc/authValidator");
 
 const tokenModel = require("../models/Token.model");
 const userModel = require("../models/User.model");

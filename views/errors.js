@@ -42,6 +42,13 @@ errors.loginFailed = (req, res) => {
     });
 }
 
+errors.unauthorized = (req, res) => {
+    res.status(401);
+    res.json({
+        "message": "You are not authorized to perform this action"
+    });
+}
+
 errors.notFound = (req, res, name) => {
     res.status(404);
     res.json({
