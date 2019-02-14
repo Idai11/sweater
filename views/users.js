@@ -26,7 +26,12 @@ const getUsers = (req, res) => {
         if (err) {
             errors.databaseError(req, res);
         } else {
-            res.json(users);
+            res.json(users.map(user => {
+                user = user.toObject();
+                delete user.password;
+                delete user.salt;
+                return user;
+            }));
         }
     });
 }
