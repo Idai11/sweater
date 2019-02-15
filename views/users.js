@@ -60,6 +60,9 @@ const postUsers = (req, res) => {
             }
         } else {
             res.status(201);
+            user = user.toObject();
+            delete user.password;
+            delete user.salt;
             res.json(user);
         }
     })

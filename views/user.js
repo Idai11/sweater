@@ -26,35 +26,49 @@ const user = (req, res) => {
 
 const userGet = (req, res, userId) => {
     try {
-        const userObjId = objectId(userId);
-        userModel.findOne({"_id": userObjId}, (err, user) => {
-            if (err) {
-                errors.databaseError(req, res, err);
-            } else {
-                if (user) {
-                    user = user.toObject();
-                    delete user.password;
-                    delete user.salt;
-                    res.json(user);
+        if (userId === "me") {
+            validator(req, res, authUser => {
+                authUser = authUser.toObject();
+                delete authUser.password;
+                delete authUser.salt;
+                res.json(authUser);
+            });
+        } else {
+            const userObjId = objectId(userId);
+            userModel.findOne({"_id": userObjId}, (err, user) => {
+                if (err) {
+                    errors.databaseError(req, res, err);
                 } else {
-                    errors.notFound(req, res, "User");
+                    if (user) {
+                        user = user.toObject();
+                        delete user.password;
+                        delete user.salt;
+                        res.json(user);
+                    } else {
+                        errors.notFound(req, res, "User");
+                    }
                 }
-            }
-        });
+            });
+        }
     } catch {
         errors.invalidArguments(req, res, ["userId"]);
     }
 }
 
 const userPut = (req, res, userId) => {
-    try {
-        const userObjId = objectId(userId);
-        userModel.findOne({"_id": userObjId}, (err, user) => {
-            if (err) {
-                errors.databaseError(req, res, err);
+    validator(req, res, authUser => {
+        try {
+            let userObjId = "";
+            if (userId === "me") {
+                userObjId = authUser._id;
             } else {
-                if (user) {
-                    validator(req, res, authUser => {
+                userObjId = objectId(userId);
+            }
+            userModel.findOne({"_id": userObjId}, (err, user) => {
+                if (err) {
+                    errors.databaseError(req, res, err);
+                } else {
+                    if (user) {
                         if (authUser._id.equals(user._id)) {
                             const firstName = req.body.firstName;
                             const lastName = req.body.lastName;
@@ -84,34 +98,40 @@ const userPut = (req, res, userId) => {
                                     }
                                 } else {
                                     updated = updated.toObject();
-                                    // delete updated.password;
-                                    // delete updated.salt;
+                                    delete updated.password;
+                                    delete updated.salt;
                                     res.json(updated);
                                 }
                             });
                         } else {
                             errors.unauthorized(req, res);
                         }
-                    });
-                } else {
-                    errors.notFound(req, res, "User");
+                    } else {
+                        errors.notFound(req, res, "User");
+                    }
                 }
-            }
-        });
-    } catch {
-        errors.invalidArguments(req, res, ["userId"]);
-    }
+            });
+        } catch (err) {
+            console.log(err);
+            errors.invalidArguments(req, res, ["userId"]);
+        }
+    });
 }
 
 const userDelete = (req, res, userId) => {
-    try {
-        const userObjId = objectId(userId);
-        userModel.findOne({"_id": userObjId}, (err, user) => {
-            if (err) {
-                errors.databaseError(req, res, err);
+    validator(req, res, authUser => {
+        try {
+            let userObjId = "";
+            if (userId === "me") {
+                userObjId = authUser._id;
             } else {
-                if (user) {
-                    validator(req, res, authUser => {
+                userObjId = objectId(userId);
+            }
+            userModel.findOne({"_id": userObjId}, (err, user) => {
+                if (err) {
+                    errors.databaseError(req, res, err);
+                } else {
+                    if (user) {
                         if (authUser._id.equals(user._id)) {
                             userModel.deleteOne({"_id": userObjId}, err => {
                                 if (err) {
@@ -124,15 +144,15 @@ const userDelete = (req, res, userId) => {
                         } else {
                             errors.unauthorized(req, res);
                         }
-                    });
-                } else {
-                    errors.notFound(req, res, "User");
+                    } else {
+                        errors.notFound(req, res, "User");
+                    }
                 }
-            }
-        });
-    } catch {
-        errors.invalidArguments(req, res, ["userId"]);
-    }
+            });
+        } catch {
+            errors.invalidArguments(req, res, ["userId"]);
+        }
+    });
 }
 
 module.exports = user;
