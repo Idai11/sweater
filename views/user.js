@@ -77,7 +77,6 @@ const userPut = (req, res, userId) => {
                             const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + authUser.salt).digest("base64") : false;
 
                             if (password) {
-                                console.log(password);
                                 if (oldPassword === authUser.password) {
                                     authUser.password = password;
                                 } else {
@@ -112,7 +111,6 @@ const userPut = (req, res, userId) => {
                 }
             });
         } catch (err) {
-            console.log(err);
             errors.invalidArguments(req, res, ["userId"]);
         }
     });
