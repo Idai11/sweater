@@ -1,6 +1,6 @@
 const error = require("./errors");
 
-const potModel = require("../models/pot");
+const potModel = require("../models/Pot.model");
 
 const pots = (req, res) => {
     const method = req.method.toUpperCase();

@@ -1,7 +1,7 @@
 const error = require("./errors");
 const validator = require("../misc/authValidator");
 
-const potModel = require("../models/pot");
+const potModel = require("../models/Pot.model");
 
 const pot = (req, res) => {
     const method = req.method.toUpperCase();
@@ -17,7 +17,7 @@ const pot = (req, res) => {
     }
 };
 
-const getPot = (req, res, potId) {
+const getPot = (req, res, potId) => {
     validator(req, res, user => {
         potModel.findOne({"_id": potId}, (err, pot) => {
             if (!err) {
