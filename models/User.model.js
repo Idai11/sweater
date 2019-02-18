@@ -30,6 +30,10 @@ const userSchema = new Schema({
     salt: {
         type: String,
         required: true
+    },
+    badges: {
+        type: [Schema.Types.ObjectId],
+        default: []
     }
 });
 
