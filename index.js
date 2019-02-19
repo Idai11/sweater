@@ -10,6 +10,7 @@ const tokens = require("./views/tokens");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.static("static"));
 
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 
