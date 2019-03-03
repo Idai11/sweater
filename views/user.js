@@ -24,6 +24,13 @@ const user = (req, res) => {
     }
 }
 
+/*
+Get a user object
+REQUIRES:
+    id (url param)
+RETURNS:
+    user object
+*/
 const userGet = (req, res, userId) => {
     try {
         if (userId === "me") {
@@ -55,6 +62,17 @@ const userGet = (req, res, userId) => {
     }
 }
 
+/*
+Updates the user
+LOGIN REQUIRED!
+REQUIRES (OPTIONAL):
+    firstName
+    lastName
+    email
+    oldPassword & password
+RETURNS:
+    updated user object
+*/
 const userPut = (req, res, userId) => {
     validator(req, res, authUser => {
         try {
@@ -116,6 +134,14 @@ const userPut = (req, res, userId) => {
     });
 }
 
+/*
+Deletes the user
+LOGIN REQUIRED!
+REQUIRES:
+    nothing
+RETURNS:
+    nothing
+*/
 const userDelete = (req, res, userId) => {
     validator(req, res, authUser => {
         try {

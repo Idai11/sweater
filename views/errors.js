@@ -2,6 +2,9 @@ const config = require("../misc/config");
 
 const errors = {};
 
+/*
+The request was sent to a path that doesn't allow the request's method
+*/
 errors.methodNotAllowed = (req, res) => {
     res.status(400);
     res.json({
@@ -11,6 +14,9 @@ errors.methodNotAllowed = (req, res) => {
     });
 }
 
+/*
+There was an error fetching or updating the database
+*/
 errors.databaseError = (req, res, err) => {
     if (config.debug) {
         console.log(err);
@@ -24,6 +30,10 @@ errors.databaseError = (req, res, err) => {
     });
 }
 
+/*
+There are missing arguments
+OR Invalid arguments (for example: wrong type)
+*/
 errors.invalidArguments = (req, res, invalid) => {
     res.status(400);
     res.json({
@@ -34,6 +44,9 @@ errors.invalidArguments = (req, res, invalid) => {
     });
 }
 
+/*
+The client attempted to create a new user with a taken email
+*/
 errors.emailTaken = (req, res) => {
     res.status(400);
     res.json({
@@ -43,6 +56,9 @@ errors.emailTaken = (req, res) => {
     });
 }
 
+/*
+The auth token was invalid
+*/
 errors.loginFailed = (req, res) => {
     res.status(401);
     res.json({
@@ -52,6 +68,9 @@ errors.loginFailed = (req, res) => {
     });
 }
 
+/*
+The user is unauthorized to do the action which he attempted to do
+*/
 errors.unauthorized = (req, res) => {
     res.status(401);
     res.json({
@@ -61,6 +80,9 @@ errors.unauthorized = (req, res) => {
     });
 }
 
+/*
+The page or object was not found
+*/
 errors.notFound = (req, res, name) => {
     res.status(404);
     res.json({

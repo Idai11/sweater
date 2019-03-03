@@ -9,9 +9,6 @@ const users = (req, res) => {
     const method = req.method.toUpperCase();
 
     switch (method) {
-        case "GET":
-            getUsers(req, res);
-            break;
         case "POST":
             postUsers(req, res);
             break;
@@ -21,21 +18,16 @@ const users = (req, res) => {
     }
 };
 
-const getUsers = (req, res) => {
-    userModel.find({}, (err, users) => {
-        if (err) {
-            errors.databaseError(req, res, err);
-        } else {
-            res.json(users.map(user => {
-                user = user.toObject();
-                delete user.password;
-                delete user.salt;
-                return user;
-            }));
-        }
-    });
-}
-
+/*
+Creates a new user (sign up)
+REQUIRES:
+    firstName
+    lastName
+    email
+    password
+RETURNS:
+    the new user object
+*/
 const postUsers = (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;

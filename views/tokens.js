@@ -23,6 +23,14 @@ const tokens = (req, res) => {
     }
 }
 
+/*
+Create a new auth token (log in)
+REQUIRES:
+    email
+    password
+RETURNS:
+    the token object
+*/
 const tokensPost = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -57,6 +65,14 @@ const tokensPost = (req, res) => {
     });
 }
 
+/*
+Deletes a token (log out)
+LOGIN REQUIRED!
+REQUIRES:
+    nothing
+RETURNS:
+    nothing
+*/
 const tokensDelete = (req, res) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
 
