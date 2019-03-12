@@ -24,7 +24,19 @@ app.use((req, res, next) => {
     next();
 });
 
-// URL Map
+/*
+URL MAP:
+/api
+    /users
+        @POST
+        /:userId
+            @GET
+            @PUT
+            @DELETE
+    /tokens
+        @POST
+        @DELETE
+*/
 app.all("/api/users", users);
 app.all("/api/users/:userId", user);
 app.all("/api/tokens", tokens);
