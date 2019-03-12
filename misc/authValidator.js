@@ -36,7 +36,9 @@ const validate = (req, res, callback) => {
             }
         });
     } else {
-        errors.loginFailed(req, res);
+        callback({
+            admin: false
+        });
     }
 };
 

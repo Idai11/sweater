@@ -34,7 +34,7 @@ const userSchema = new Schema({
     admin: {
         type: Boolean,
         required: false
-    }
+    },
     badges: {
         type: [Schema.Types.ObjectId],
         default: []

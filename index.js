@@ -8,6 +8,7 @@ const users = require("./views/users");
 const user = require("./views/user");
 const tokens = require("./views/tokens");
 const errors = require("./views/errors");
+const validator = require("./misc/authValidator");
 
 const app = express();
 // Setup the JSON request parser
@@ -18,10 +19,20 @@ app.use(express.static("static"));
 // Connect to test database
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 
-// Request logging
+// Pre-Request middleware
 app.use((req, res, next) => {
+    // Allow origin
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+    // Request logging
     console.log(`${req.method} request to ${req.url}`);
-    next();
+
+    // Pass authUser
+    validator(req, res, authUser => {
+        req.authUser = authUser;
+        next();
+    });
 });
 
 /*

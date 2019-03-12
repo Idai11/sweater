@@ -76,7 +76,7 @@ RETURNS:
 const tokensDelete = (req, res) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
 
-    validator(req, res, user => {
+    if (req.authUser) {
         tokenModel.deleteOne({"_id": token}, err => {
             if (err) {
                 errors.databaseError(req, res, err);
@@ -85,7 +85,7 @@ const tokensDelete = (req, res) => {
                 res.json();
             }
         });
-    });
+    }
 }
 
 module.exports = tokens;

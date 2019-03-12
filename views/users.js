@@ -2,6 +2,7 @@ const errors = require("./errors");
 const stringers = require("../misc/stringers");
 const config = require("../misc/config");
 const crypto = require("crypto");
+const validator = require("../misc/authValidator");
 
 const userModel = require("../models/User.model");
 
@@ -9,6 +10,9 @@ const users = (req, res) => {
     const method = req.method.toUpperCase();
 
     switch (method) {
+        case "GET":
+            getUsers(req, res);
+            break;
         case "POST":
             postUsers(req, res);
             break;
@@ -17,6 +21,28 @@ const users = (req, res) => {
             break;
     }
 };
+
+/*
+Gets a list of all users
+ADMIN REQUIRED
+REQUIRES:
+    nothing
+RETURNS:
+    a list of all users
+*/
+const getUsers = (req, res) => {
+    if (req.authUser.admin) {
+        userModel.find({}, (err, users) => {
+            if (err) {
+                errors.databaseError(req, res);
+            } else {
+                res.json(users);
+            }
+        })
+    } else {
+        return errors.unauthorized(req, res);
+    }
+}
 
 /*
 Creates a new user (sign up)
