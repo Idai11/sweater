@@ -7,6 +7,7 @@ const config = require("./misc/config");
 const users = require("./views/users");
 const user = require("./views/user");
 const tokens = require("./views/tokens");
+const token = require("./views/token");
 const errors = require("./views/errors");
 const validator = require("./misc/authValidator");
 
@@ -51,6 +52,7 @@ URL MAP:
 app.all("/api/users", users);
 app.all("/api/users/:userId", user);
 app.all("/api/tokens", tokens);
+app.all("/api/tokens/:tokenId", token);
 
 // Catch 404s
 app.use((req, res, next) => {

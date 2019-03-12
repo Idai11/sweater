@@ -11,17 +11,39 @@ const tokens = (req, res) => {
     const method = req.method.toUpperCase();
 
     switch (method) {
+        case "GET":
+            tokensGet(req, res);
+            break;
         case "POST":
             tokensPost(req, res);
-            break;
-        case "DELETE":
-            tokensDelete(req, res);
             break;
         default:
             errors.methodNotAllowed(req, res);
             break;
     }
 }
+
+/*
+Gets a list of all tokens
+ADMIN REQUIRED
+REQUIRES:
+    nothing
+RETURNS:
+    a list of all the tokens
+*/
+const tokensGet = (req, res) => {
+    if (req.authUser.admin) {
+        tokenModel.find({}, (err, tokens) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                res.json(tokens);
+            }
+        })
+    } else {
+        errors.unauthorized(req, res);
+    }
+};
 
 /*
 Create a new auth token (log in)
@@ -56,36 +78,15 @@ const tokensPost = (req, res) => {
                         }
                     })
                 } else {
+                    console.log("Wrong pass");
                     errors.loginFailed(req, res);
                 }
             } else {
+                console.log("No user");
                 errors.loginFailed(req, res);
             }
         }
     });
-}
-
-/*
-Deletes a token (log out)
-LOGIN REQUIRED!
-REQUIRES:
-    nothing
-RETURNS:
-    nothing
-*/
-const tokensDelete = (req, res) => {
-    const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
-
-    if (req.authUser) {
-        tokenModel.deleteOne({"_id": token}, err => {
-            if (err) {
-                errors.databaseError(req, res, err);
-            } else {
-                res.status(204);
-                res.json();
-            }
-        });
-    }
 }
 
 module.exports = tokens;

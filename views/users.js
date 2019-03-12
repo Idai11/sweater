@@ -34,7 +34,7 @@ const getUsers = (req, res) => {
     if (req.authUser.admin) {
         userModel.find({}, (err, users) => {
             if (err) {
-                errors.databaseError(req, res);
+                errors.databaseError(req, res, err);
             } else {
                 res.json(users);
             }

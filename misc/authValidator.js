@@ -37,7 +37,8 @@ const validate = (req, res, callback) => {
         });
     } else {
         callback({
-            admin: false
+            admin: false,
+            email: false
         });
     }
 };

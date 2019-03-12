@@ -34,7 +34,7 @@ RETURNS:
 const userGet = (req, res, userId) => {
     try {
         if (userId === "me") {
-            if (req.authUser) {
+            if (req.authUser.email) {
                 authUser = req.authUser.toObject();
                 delete authUser.password;
                 delete authUser.salt;
