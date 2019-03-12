@@ -17,6 +17,10 @@ const tokens = (req, res) => {
         case "POST":
             tokensPost(req, res);
             break;
+        case "OPTIONS":
+            res.status(200);
+            res.end();
+            break;
         default:
             errors.methodNotAllowed(req, res);
             break;
@@ -56,6 +60,7 @@ RETURNS:
 const tokensPost = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req);
 
     userModel.findOne({"email": email}, (err, user) => {
         if (err) {
@@ -74,15 +79,14 @@ const tokensPost = (req, res) => {
                         if (err) {
                             errors.databaseError(req, res, err);
                         } else {
+                            token.admin = user.admin;
                             res.json(token);
                         }
                     })
                 } else {
-                    console.log("Wrong pass");
                     errors.loginFailed(req, res);
                 }
             } else {
-                console.log("No user");
                 errors.loginFailed(req, res);
             }
         }
