@@ -60,7 +60,6 @@ RETURNS:
 const tokensPost = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    console.log(req);
 
     userModel.findOne({"email": email}, (err, user) => {
         if (err) {

@@ -88,12 +88,12 @@ const userPut = (req, res, userId) => {
                 errors.databaseError(req, res, err);
             } else {
                 if (user) {
-                    if (req.authUser._id.equals(user._id) || req.authUser.admin) {
+                    if (req.authUser.email && (req.authUser._id.equals(user._id) || req.authUser.admin)) {
                         const firstName = req.body.firstName;
                         const lastName = req.body.lastName;
                         const email = req.body.email;
                         const oldPassword = typeof(req.body.oldPassword) == "string" && req.body.oldPassword.length > 0 ? crypto.createHash("sha512").update(req.body.oldPassword + authUser.salt).digest("base64") : false;
-                        const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + authUser.salt).digest("base64") : false;
+                        const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + req.authUser.salt).digest("base64") : false;
 
                         if (password) {
                             if (oldPassword === user.password) {
