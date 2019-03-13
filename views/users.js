@@ -2,6 +2,7 @@ const errors = require("./errors");
 const stringers = require("../misc/stringers");
 const config = require("../misc/config");
 const crypto = require("crypto");
+const validator = require("../misc/authValidator");
 
 const userModel = require("../models/User.model");
 
@@ -21,21 +22,38 @@ const users = (req, res) => {
     }
 };
 
+/*
+Gets a list of all users
+ADMIN REQUIRED
+REQUIRES:
+    nothing
+RETURNS:
+    a list of all users
+*/
 const getUsers = (req, res) => {
-    userModel.find({}, (err, users) => {
-        if (err) {
-            errors.databaseError(req, res, err);
-        } else {
-            res.json(users.map(user => {
-                user = user.toObject();
-                delete user.password;
-                delete user.salt;
-                return user;
-            }));
-        }
-    });
+    if (req.authUser.admin) {
+        userModel.find({}, (err, users) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                res.json(users);
+            }
+        })
+    } else {
+        return errors.unauthorized(req, res);
+    }
 }
 
+/*
+Creates a new user (sign up)
+REQUIRES:
+    firstName
+    lastName
+    email
+    password
+RETURNS:
+    the new user object
+*/
 const postUsers = (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;

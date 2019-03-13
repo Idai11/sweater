@@ -24,15 +24,24 @@ const user = (req, res) => {
     }
 }
 
+/*
+Get a user object
+REQUIRES:
+    id (url param)
+RETURNS:
+    user object
+*/
 const userGet = (req, res, userId) => {
     try {
         if (userId === "me") {
-            validator(req, res, authUser => {
-                authUser = authUser.toObject();
+            if (req.authUser.email) {
+                authUser = req.authUser.toObject();
                 delete authUser.password;
                 delete authUser.salt;
                 res.json(authUser);
-            });
+            } else {
+                errors.unauthorized(req, res);
+            }
         } else {
             const userObjId = objectId(userId);
             userModel.findOne({"_id": userObjId}, (err, user) => {
@@ -55,102 +64,117 @@ const userGet = (req, res, userId) => {
     }
 }
 
+/*
+Updates the user
+LOGIN REQUIRED!
+REQUIRES (OPTIONAL):
+    firstName
+    lastName
+    email
+    oldPassword & password
+RETURNS:
+    updated user object
+*/
 const userPut = (req, res, userId) => {
-    validator(req, res, authUser => {
-        try {
-            let userObjId = "";
-            if (userId === "me") {
-                userObjId = authUser._id;
-            } else {
-                userObjId = objectId(userId);
-            }
-            userModel.findOne({"_id": userObjId}, (err, user) => {
-                if (err) {
-                    errors.databaseError(req, res, err);
-                } else {
-                    if (user) {
-                        if (authUser._id.equals(user._id)) {
-                            const firstName = req.body.firstName;
-                            const lastName = req.body.lastName;
-                            const email = req.body.email;
-                            const oldPassword = typeof(req.body.oldPassword) == "string" && req.body.oldPassword.length > 0 ? crypto.createHash("sha512").update(req.body.oldPassword + authUser.salt).digest("base64") : false;
-                            const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + authUser.salt).digest("base64") : false;
-
-                            if (password) {
-                                if (oldPassword === authUser.password) {
-                                    authUser.password = password;
-                                } else {
-                                    errors.invalidArguments(req, res, ["oldPassword"]);
-                                    return;
-                                }
-                            }
-                            if (firstName) authUser.firstName = firstName;
-                            if (lastName) authUser.lastName = lastName;
-                            if (email) authUser.email = email;
-
-                            authUser.save((err, updated) => {
-                                if (err) {
-                                    if (typeof(err.errors) == "undefined") {
-                                        errors.emailTaken(req, res);
-                                    } else {
-                                        errors.invalidArguments(req, res, Object.keys(err.errors));
-                                    }
-                                } else {
-                                    updated = updated.toObject();
-                                    delete updated.password;
-                                    delete updated.salt;
-                                    res.json(updated);
-                                }
-                            });
-                        } else {
-                            errors.unauthorized(req, res);
-                        }
-                    } else {
-                        errors.notFound(req, res, "User");
-                    }
-                }
-            });
-        } catch (err) {
-            errors.invalidArguments(req, res, ["userId"]);
+    try {
+        let userObjId = "";
+        if (userId === "me") {
+            userObjId = req.authUser._id;
+        } else {
+            userObjId = objectId(userId);
         }
-    });
+        userModel.findOne({"_id": userObjId}, (err, user) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                if (user) {
+                    if (req.authUser._id.equals(user._id) || req.authUser.admin) {
+                        const firstName = req.body.firstName;
+                        const lastName = req.body.lastName;
+                        const email = req.body.email;
+                        const oldPassword = typeof(req.body.oldPassword) == "string" && req.body.oldPassword.length > 0 ? crypto.createHash("sha512").update(req.body.oldPassword + authUser.salt).digest("base64") : false;
+                        const password = typeof(req.body.password) == "string" && req.body.password.length > 0 ? crypto.createHash("sha512").update(req.body.password + authUser.salt).digest("base64") : false;
+
+                        if (password) {
+                            if (oldPassword === user.password) {
+                                user.password = password;
+                            } else {
+                                errors.invalidArguments(req, res, ["oldPassword"]);
+                                return;
+                            }
+                        }
+                        if (firstName) user.firstName = firstName;
+                        if (lastName) user.lastName = lastName;
+                        if (email) user.email = email;
+
+                        user.save((err, updated) => {
+                            if (err) {
+                                if (typeof(err.errors) == "undefined") {
+                                    errors.emailTaken(req, res);
+                                } else {
+                                    errors.invalidArguments(req, res, Object.keys(err.errors));
+                                }
+                            } else {
+                                updated = updated.toObject();
+                                delete updated.password;
+                                delete updated.salt;
+                                res.json(updated);
+                            }
+                        });
+                    } else {
+                        errors.unauthorized(req, res);
+                    }
+                } else {
+                    errors.notFound(req, res, "User");
+                }
+            }
+        });
+    } catch (err) {
+        errors.invalidArguments(req, res, ["userId"]);
+    }
 }
 
+/*
+Deletes the user
+LOGIN REQUIRED!
+REQUIRES:
+    nothing
+RETURNS:
+    nothing
+*/
 const userDelete = (req, res, userId) => {
-    validator(req, res, authUser => {
-        try {
-            let userObjId = "";
-            if (userId === "me") {
-                userObjId = authUser._id;
-            } else {
-                userObjId = objectId(userId);
-            }
-            userModel.findOne({"_id": userObjId}, (err, user) => {
-                if (err) {
-                    errors.databaseError(req, res, err);
-                } else {
-                    if (user) {
-                        if (authUser._id.equals(user._id)) {
-                            userModel.deleteOne({"_id": userObjId}, err => {
-                                if (err) {
-                                    errors.databaseError(req, res, err);
-                                } else {
-                                    res.status(204);
-                                    res.json();
-                                }
-                            });
-                        } else {
-                            errors.unauthorized(req, res);
-                        }
-                    } else {
-                        errors.notFound(req, res, "User");
-                    }
-                }
-            });
-        } catch {
-            errors.invalidArguments(req, res, ["userId"]);
+    try {
+        let userObjId = "";
+        if (userId === "me") {
+            userObjId = req.authUser._id;
+        } else {
+            userObjId = objectId(userId);
         }
-    });
+        userModel.findOne({"_id": userObjId}, (err, user) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                if (user) {
+                    if (req.authUser._id.equals(user._id) || req.authUser.admin) {
+                        userModel.deleteOne({"_id": userObjId}, err => {
+                            if (err) {
+                                errors.databaseError(req, res, err);
+                            } else {
+                                res.status(204);
+                                res.json();
+                            }
+                        });
+                    } else {
+                        errors.unauthorized(req, res);
+                    }
+                } else {
+                    errors.notFound(req, res, "User");
+                }
+            }
+        });
+    } catch {
+        errors.invalidArguments(req, res, ["userId"]);
+    }
 }
 
 module.exports = user;

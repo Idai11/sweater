@@ -11,11 +11,15 @@ const tokens = (req, res) => {
     const method = req.method.toUpperCase();
 
     switch (method) {
+        case "GET":
+            tokensGet(req, res);
+            break;
         case "POST":
             tokensPost(req, res);
             break;
-        case "DELETE":
-            tokensDelete(req, res);
+        case "OPTIONS":
+            res.status(200);
+            res.end();
             break;
         default:
             errors.methodNotAllowed(req, res);
@@ -23,9 +27,40 @@ const tokens = (req, res) => {
     }
 }
 
+/*
+Gets a list of all tokens
+ADMIN REQUIRED
+REQUIRES:
+    nothing
+RETURNS:
+    a list of all the tokens
+*/
+const tokensGet = (req, res) => {
+    if (req.authUser.admin) {
+        tokenModel.find({}, (err, tokens) => {
+            if (err) {
+                errors.databaseError(req, res, err);
+            } else {
+                res.json(tokens);
+            }
+        })
+    } else {
+        errors.unauthorized(req, res);
+    }
+};
+
+/*
+Create a new auth token (log in)
+REQUIRES:
+    email
+    password
+RETURNS:
+    the token object
+*/
 const tokensPost = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req);
 
     userModel.findOne({"email": email}, (err, user) => {
         if (err) {
@@ -44,6 +79,7 @@ const tokensPost = (req, res) => {
                         if (err) {
                             errors.databaseError(req, res, err);
                         } else {
+                            token.admin = user.admin;
                             res.json(token);
                         }
                     })
@@ -54,21 +90,6 @@ const tokensPost = (req, res) => {
                 errors.loginFailed(req, res);
             }
         }
-    });
-}
-
-const tokensDelete = (req, res) => {
-    const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
-
-    validator(req, res, user => {
-        tokenModel.deleteOne({"_id": token}, err => {
-            if (err) {
-                errors.databaseError(req, res, err);
-            } else {
-                res.status(204);
-                res.json();
-            }
-        });
     });
 }
 

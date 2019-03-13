@@ -1,5 +1,8 @@
 const stringers = {};
 
+/*
+Generate a random string with the specified length
+*/
 stringers.generateRandomString = length => {
     var out = "";
 
@@ -10,6 +13,10 @@ stringers.generateRandomString = length => {
     return out;
 };
 
+/*
+Genrate a random string with the specified length
+The string can contain only letters and numbers
+*/
 stringers.generateRandomStringPretty = length => {
     var out = "";
 

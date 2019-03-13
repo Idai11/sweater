@@ -4,6 +4,11 @@ const tokenMaker = require("./tokens");
 const tokenModel = require("../models/Token.model");
 const userModel = require("../models/User.model");
 
+/*
+Validate the user from the request headers
+Return a login failed error if problem is found
+Callback with the authenticated user if succesful
+*/
 const validate = (req, res, callback) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
     const tokenData = tokenMaker.eval(token);
@@ -31,7 +36,10 @@ const validate = (req, res, callback) => {
             }
         });
     } else {
-        errors.loginFailed(req, res);
+        callback({
+            admin: false,
+            email: false
+        });
     }
 };
 
