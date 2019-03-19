@@ -16,6 +16,10 @@ const users = (req, res) => {
         case "POST":
             postUsers(req, res);
             break;
+        case "OPTIONS":
+            res.status(200);
+            res.end();
+            break;
         default:
             errors.methodNotAllowed(req, res);
             break;

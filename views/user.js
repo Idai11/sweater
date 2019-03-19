@@ -19,6 +19,10 @@ const user = (req, res) => {
         case "DELETE":
             userDelete(req, res, userId);
             break;
+        case "OPTIONS":
+            res.status(200);
+            res.end();
+            break;
         default:
             errors.methodNotAllowed(req, res);
     }

@@ -11,6 +11,10 @@ const token = (req, res, tokenId) => {
         case "DELETE":
             tokenDelete(req, res, tokenId);
             break;
+        case "OPTIONS":
+            res.status(200);
+            res.end();
+            break;
         default:
             errors.methodNotAllowed(req, res);
             break;

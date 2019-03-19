@@ -78,7 +78,9 @@ const tokensPost = (req, res) => {
                         if (err) {
                             errors.databaseError(req, res, err);
                         } else {
-                            token.admin = user.admin;
+                            token = token.toObject();
+                            token["admin"] = user.admin;
+                            console.log(token);
                             res.json(token);
                         }
                     })

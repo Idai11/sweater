@@ -24,7 +24,7 @@ mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
 app.use((req, res, next) => {
     // Allow origin
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
 
     // Request logging
     console.log(`${req.method} request to ${req.url}`);
