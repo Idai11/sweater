@@ -1,5 +1,6 @@
-const errors = require("../views/errors");
 const tokenMaker = require("./tokens");
+
+const errors = require("../graphql/errors");
 
 const tokenModel = require("../models/Token.model");
 const userModel = require("../models/User.model");
@@ -21,25 +22,22 @@ const validate = (req, res, callback) => {
                 if (token) {
                     userModel.findOne({"_id": tokenData.sub}, (err, user) => {
                         if (err) {
-                            errors.databaseError(req, res, err);
+                            callback(false);
                         } else {
                             if (user) {
                                 callback(user);
                             } else {
-                                errors.loginFailed(req, res);
+                                callback(false);
                             }
                         }
                     });
                 } else {
-                    errors.loginFailed(req, res);
+                    callback(false);
                 }
             }
         });
     } else {
-        callback({
-            admin: false,
-            email: false
-        });
+        callback(false);
     }
 };
 
