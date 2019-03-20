@@ -5,7 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo No!",
-    "start": "cls && node index.js"
+    "start": "node index.js",
+    "watch": "cls && npm-watch"
+  },
+  "watch": {
+    "start": {
+      "patterns": [
+        "."
+      ],
+      "extensions": [
+        "js"
+      ],
+      "quiet": true
+    }
   },
   "repository": {
     "type": "git",
@@ -20,7 +32,13 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.11"
+  },
+  "devDependencies": {
+    "npm-watch": "^0.6.0"
   }
 }
