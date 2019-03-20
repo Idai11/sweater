@@ -35,10 +35,6 @@ const userSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
-    },
-    badges: {
-        type: [Schema.Types.ObjectId],
-        default: []
     }
 });
 
