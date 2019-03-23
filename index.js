@@ -2,6 +2,7 @@ const express = require("express");
 const graphqlExpress = require("express-graphql");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const schema = require("./graphql/schema");
 const config = require("./misc/config");
@@ -9,8 +10,8 @@ const config = require("./misc/config");
 const validator = require("./misc/authValidator");
 
 const app = express();
-// Setup the JSON request parser
-app.use(bodyParser.json());
+// Setup app with CORS policy
+app.use(cors());
 // Set /static as staticfiles directory
 app.use(express.static("static"));
 
