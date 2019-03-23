@@ -12,30 +12,38 @@ Callback with the authenticated user if succesful
 */
 const validate = (req, res, callback) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
+    // tokenData will be false if token is not signed correctly or overdue
     const tokenData = tokenMaker.eval(token);
 
+    // If token was passed, proceed to validate
     if (token) {
+        // Check if user has logged out (is token in DB?)
         tokenModel.findOne({"_id": token}, (err, token) => {
             if (err) {
-                errors.databaseError(req, res, err);
+                throw errors.authFail();
             } else {
-                if (token) {
+                // If token was in DB and is signed correctly and not overdue
+                if (token && tokenData) {
+                    // Find the use which the token belongs to
                     userModel.findOne({"_id": tokenData.sub}, (err, user) => {
                         if (err) {
-                            callback(false);
+                            throw errors.authFail();
                         } else {
+                            // If the user was found
                             if (user) {
+                                // Callback the user
                                 callback(user);
                             } else {
-                                callback(false);
+                                throw errors.authFail();
                             }
                         }
                     });
                 } else {
-                    callback(false);
+                    throw errors.authFail();
                 }
             }
         });
+    // No token was passed, user is not authed but no authentication error was thrown
     } else {
         callback(false);
     }

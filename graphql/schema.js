@@ -14,6 +14,7 @@ const typeDefs = `
         users(count: Int = 10, offset: Int = 0): [User]!
         user(id: String!): User!
         me: User!
+        error: String
 
         tokens(count: Int = 10, offset: Int = 0): [Token]!
     }

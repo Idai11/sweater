@@ -29,7 +29,14 @@ app.use((req, res, next) => {
 
 app.use("/graphql", graphqlExpress({
     schema: schema,
-    graphiql: true
+    graphiql: true,
+    formatError: error => {
+        const content = error.message.split("\n");
+        return {
+            message: content[0],
+            code: parseInt(content[1])
+        }
+    }
 }));
 
 // Catch 404s
