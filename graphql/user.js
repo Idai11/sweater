@@ -66,7 +66,8 @@ module.exports = resolvers => {
                 max_length: 63
             };
 
-            if (fieldValidator.stringValidator([old_password, password], options)) {
+            if (fieldValidator.stringValidator([old_password, password], options)
+                    || (fieldValidator.stringValidator([password], options) && req.authUser.admin)) {
                 const hashedOld = crypto
                     .createHash("sha512")
                     .update(old_password + user.salt)
