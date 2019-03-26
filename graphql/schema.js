@@ -16,6 +16,7 @@ const typeDefs = `
         me: User!
 
         tokens(count: Int = 10, offset: Int = 0): [Token]!
+        token(id: String!): Token!
     }
 
     type Mutation {
@@ -29,7 +30,7 @@ const typeDefs = `
 
     type User {
         _id: String!
-        firstName: String
+        firstName: String!
         lastName: String!
         email: String!
         password: String!

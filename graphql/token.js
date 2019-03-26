@@ -14,6 +14,14 @@ module.exports = resolvers => {
         }
     }
 
+    resolvers.Query.token = async (root, {id}, req) => {
+        if (req.authUser && req.authUser.admin) {
+            return await tokenModel.findOne({_id: id}).exec();
+        } else {
+            throw errors.unauthorized();
+        }
+    }
+
     resolvers.Mutation.createToken = async (root, {email, password}, req) => {
         const user = await userModel.findOne({email});
 
