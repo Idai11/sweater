@@ -29,16 +29,24 @@ const typeDefs = `
     }
 
     type User {
+        """Uneditable"""
         _id: String!
+        """Editable"""
         firstName: String!
+        """Editable"""
         lastName: String!
+        """Editable"""
         email: String!
+        """Password"""
         password: String!
+        """Uneditable"""
         salt: String!
+        """Editable"""
         admin: Boolean!
     }
 
     type Token {
+        """Uneditable"""
         _id: String!
     }
 `;
