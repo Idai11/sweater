@@ -15,8 +15,9 @@ app.use(cors());
 // Set /static as staticfiles directory
 app.use(express.static("static"));
 
+console.log(process.env.DATABASE_URL);
 // Connect to test database
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
+mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true});
 
 // Pre-Request middleware
 app.use((req, res, next) => {
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
     });
 });
 
+// GraphQL Endpoint
 app.use("/graphql", graphqlExpress({
     schema: schema,
     graphiql: true,
