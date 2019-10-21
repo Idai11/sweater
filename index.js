@@ -15,7 +15,6 @@ app.use(cors());
 // Set /static as staticfiles directory
 app.use(express.static("static"));
 
-console.log(process.env.DATABASE_URL);
 // Connect to test database
 mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true});
 
@@ -40,6 +39,10 @@ app.use("/graphql", graphqlExpress({
         }
     }
 }));
+
+app.get("/", function(req, res) {
+    res.sendFile(__dirname + "/html/landing.html");
+});
 
 // Catch 404s
 app.use((req, res, next) => {
