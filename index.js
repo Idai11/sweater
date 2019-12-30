@@ -16,6 +16,7 @@ app.use(cors());
 app.use(express.static("static"));
 
 // Connect to test database
+console.log(process.env.MONGODB_URI)
 mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
 
 // Pre-Request middleware
