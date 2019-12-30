@@ -16,8 +16,8 @@ app.use(cors());
 app.use(express.static("static"));
 
 // Connect to test database
-console.log(process.env.MONGODB_URI)
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
+URI_OOPSI = "mongodb://idai:hQc2kkQVWiNNeKX2@sweater-shard-00-00-3jew7.mongodb.net:27017,sweater-shard-00-01-3jew7.mongodb.net:27017,sweater-shard-00-02-3jew7.mongodb.net:27017/test?ssl=true&replicaSet=sweater-shard-0&authSource=admin&retryWrites=true&w=majority"
+mongoose.connect(URI_OOPSI, {useNewUrlParser: true});
 
 // Pre-Request middleware
 app.use((req, res, next) => {
