@@ -2,4 +2,6 @@
 
 Remember:
 * Install mongodb
-* Run `npm install` 
+* Run `npm install`
+
+DB Password: hQc2kkQVWiNNeKX2
