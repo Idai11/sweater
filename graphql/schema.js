@@ -3,10 +3,12 @@ const { makeExecutableSchema } = require("graphql-tools");
 
 const userPlug = require("./user");
 const tokenPlug = require("./token");
+const plantPlug = require("./plants");
 
 const plugs = [
     userPlug,
-    tokenPlug
+    tokenPlug,
+    plantPlug
 ]
 
 const typeDefs = `
@@ -17,6 +19,8 @@ const typeDefs = `
 
         tokens(count: Int = 10, offset: Int = 0): [Token]!
         token(id: String!): Token!
+
+        plant(name: String!): Plant!
     }
 
     type Mutation {
@@ -48,6 +52,24 @@ const typeDefs = `
     type Token {
         """Uneditable"""
         _id: String!
+    }
+
+    type Plant {
+        water: Duration!
+        light: Range!
+        harvestTime: Range!
+        plant_time: Range!
+        distance: Int!
+        notes: [String!]
+    }
+
+    type Range {
+        min: Int
+        max: Int
+    }
+
+    type Duration {
+        day: Int
     }
 `;
 
