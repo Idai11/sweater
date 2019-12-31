@@ -33,9 +33,11 @@ module.exports = resolvers => {
     }
 
     resolvers.Mutation.createUser = async (root, {firstName, lastName, password, email}) => {
+        console.log("Hello");
+
         if (fieldValidator.stringValidator([firstName, lastName, password, email], {
                                             min_length: 1,
-                                            max_length: 63
+                                            max_length: 100
                                         })) {
             const salt = stringers.generateRandomString(5);
             const hashedPassword = crypto

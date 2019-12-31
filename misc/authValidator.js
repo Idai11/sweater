@@ -27,7 +27,7 @@ const validate = (req, res, callback) => {
     if (tokenData) {
 
         // Check if user has logged out (is token in DB?)
-        tokenModel.findOne({"_id": tokenData.sub}, (err, token) => {
+        tokenModel.findOne({"_id": token}, (err, token) => {
             if (err) {
                 throw errors.authFail();
             } else {

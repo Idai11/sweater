@@ -22,7 +22,10 @@ const potSchema = new Schema({
     lightHours: [Number],
     moisture: Number,
     waterLevel: Number,
-    owner: userSchema
+    owner: {
+        type: userSchema,
+        required: true
+    }
 });
 
 module.exports = mongoose.model("Pot", potSchema);
