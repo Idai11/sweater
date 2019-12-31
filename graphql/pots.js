@@ -4,9 +4,9 @@ const fieldValidator = require("../misc/fieldValidator")
 
 module.exports = resolvers => {
     resolvers.Query.pot = async (root, {id}, req) => {
-        const pot = await potModel.findOne({_id: objId(id)}).exec();
+        const pot = await potModel.findOne({_id: id}).exec();
         if (req.authUser && (req.authUser.admin || req.authUser._id.equals(pot.owner._id))) {
-            return user;
+            return pot;
         } else {
             throw errors.unauthorized();
         }
@@ -38,11 +38,18 @@ module.exports = resolvers => {
         }
     }
 
-    resolver.Mutation.addData = async (root, {id, moisture, light}, req) => {
+    resolvers.Mutation.addData = async (root, {id, moisture, light}, req) => {
         if (fieldValidator.intValidator([moisture, light])) {
-            pot = potModel.findOne({_id: id}).exec();
+            pot = await potModel.findOne({_id: id}).exec();
             if (pot && (req.authUser.admin || pot.owner._id.equals(req.authUser._id))) {
-                
+                pot.moisture = moisture;
+
+                if (pot.lightHours.length >= 8) {
+                    pot.lightHours.shift();
+                }
+                pot.lightHours.push(light);
+
+                return await pot.save();
             }
         }
     }

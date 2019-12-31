@@ -21,5 +21,6 @@ const intValidator = vals => {
 }
 
 module.exports = {
-    stringValidator
+    stringValidator,
+    intValidator
 }

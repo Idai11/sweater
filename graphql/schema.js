@@ -37,6 +37,7 @@ const typeDefs = `
         deleteToken(id: String): Boolean
 
         createPot(name: String!): Pot!
+        addData(id: String!, moisture: Int!, light: Int!): Pot!
     }
 
     type User {
