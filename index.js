@@ -52,4 +52,4 @@ app.use((req, res, next) => {
 })
 
 // Listen on port 3000
-app.listen(config.port, () => console.log("Server listening on port 3000"));
+app.listen(config.port, () => console.log(`Server listening on port ${config.port}`));
