@@ -38,5 +38,14 @@ module.exports = resolvers => {
         }
     }
 
+    resolver.Mutation.addData = async (root, {id, moisture, light}, req) => {
+        if (fieldValidator.intValidator([moisture, light])) {
+            pot = potModel.findOne({_id: id}).exec();
+            if (pot && (req.authUser.admin || pot.owner._id.equals(req.authUser._id))) {
+                
+            }
+        }
+    }
+
     return resolvers
 }
