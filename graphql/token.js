@@ -55,7 +55,7 @@ module.exports = resolvers => {
         if (id) {
             await tokenModel.deleteOne({_id: id});
 
-            return null;
+            return true;
         } else {
             throw errors.missingArgs();
         }

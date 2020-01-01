@@ -65,7 +65,7 @@ module.exports = resolvers => {
         if (req.authUser && (req.authUser.admin || req.authUser._id.equals(user._id))) {
             const options = {
                 min_length: 1,
-                max_length: 63
+                max_length: 100
             };
 
             if (fieldValidator.stringValidator([old_password, password], options)
@@ -107,7 +107,7 @@ module.exports = resolvers => {
         const user = await userModel.findOne({_id: objId(id)}).exec();
         if (req.authUser && (req.authUser.admin || req.authUser._id.equals(user._id))) {
             await user.remove();
-            return null;
+            return true;
         } else {
             throw errors.unauthorized();
         }

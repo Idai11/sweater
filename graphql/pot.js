@@ -54,5 +54,43 @@ module.exports = resolvers => {
         }
     }
 
+    resolvers.Mutation.updatePot = async (root, {id, name, imgUrl, plant, plantDate}, req) => {
+        const pot = await potModel.findOne({_id: id}).exec();
+        if (req.authUser && (req.authUser.admin || pot.owner._id.equals(req.authUser._id))) {
+            const options = {
+                min_length: 1,
+                max_length: 100
+            };
+
+            if (fieldValidator.stringValidator([name], options)) {
+                pot.name = name;
+            }
+
+            if (fieldValidator.stringValidator([imgUrl], options)) {
+                pot.imgUrl = imgUrl;
+            }
+
+            if (fieldValidator.stringValidator([plant], options)) {
+                pot.plant = plant;
+            }
+
+            if (fieldValidator.stringValidator([plantDate], options)) {
+                pot.plantDate = plantDate;
+            }
+
+            return await pot.save();
+        }
+    }
+
+    resolvers.Mutation.deletePot = async (root, {id}, req) => {
+        const pot = await potModel.findOne({_id: id}).exec();
+        if (req.authUser && (req.authUser.admin || req.authUser._id.equals(pot.owner._id))) {
+            await pot.remove();
+            return true;
+        } else {
+            throw errors.unauthorized();
+        }
+    }
+
     return resolvers
 }

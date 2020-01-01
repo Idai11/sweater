@@ -3,8 +3,8 @@ const { makeExecutableSchema } = require("graphql-tools");
 
 const userPlug = require("./user");
 const tokenPlug = require("./token");
+const potPlug = require("./pot");
 const plantPlug = require("./plants");
-const potPlug = require("./pots");
 
 const plugs = [
     userPlug,
@@ -38,6 +38,8 @@ const typeDefs = `
 
         createPot(name: String!): Pot!
         addData(id: String!, moisture: Int!, light: Int!): Pot!
+        updatePot(id: String!, name: String, imgUrl: String, plant: String, plantDate: String): Pot!
+        deletePot(id: String!): Boolean
     }
 
     type User {
