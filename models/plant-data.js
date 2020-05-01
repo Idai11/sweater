@@ -1,3 +1,10 @@
+/*
+FILE: plant-data.js
+*/
+
+// Data on plant requirements
+// Gathered from expert opinions
+
 module.exports = {
     "lettuce": {
         "water": {

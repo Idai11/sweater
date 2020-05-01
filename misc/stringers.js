@@ -1,3 +1,7 @@
+/*
+FILE: stringers.js
+*/
+
 const stringers = {};
 
 /*
@@ -23,12 +27,15 @@ stringers.generateRandomStringPretty = length => {
     for (let i = 1; i <= length; i++) {
         let choice = Math.floor(Math.random() * 3);
         switch (choice) {
+            // Numbers
             case 0:
                 out += Math.floor(Math.random() * 10);
                 break;
+            // Uppercase
             case 1:
                 out += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
                 break;
+            // Lowercase
             case 2:
                 out += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
                 break;

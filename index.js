@@ -1,3 +1,7 @@
+/*
+FILE: index.js
+*/
+
 const express = require("express");
 const graphqlExpress = require("express-graphql");
 const mongoose = require("mongoose");
@@ -21,7 +25,7 @@ mongoose.connect(URI_OOPSI, {useNewUrlParser: true});
 
 // Pre-Request middleware
 app.use((req, res, next) => {
-    // Pass authUser
+    // Pass authUser in request object
     validator(req, res, authUser => {
         req.authUser = authUser;
         next();
@@ -41,6 +45,7 @@ app.use("/graphql", graphqlExpress({
     }
 }));
 
+// HTML landing page (to check if site is up)
 app.get("/", function(req, res) {
     res.sendFile(__dirname + "/html/landing.html");
 });
@@ -51,5 +56,5 @@ app.use((req, res, next) => {
   res.end();
 })
 
-// Listen on port 3000
+// Listen on port from env
 app.listen(config.port, () => console.log(`Server listening on port ${config.port}`));

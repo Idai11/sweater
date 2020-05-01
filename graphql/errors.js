@@ -1,4 +1,10 @@
+/*
+FILE: errors.js
+*/
+
 const errors = {};
+
+// Pre written errors to maintain consistency
 
 // Code: 1
 errors.databaseError = () => {

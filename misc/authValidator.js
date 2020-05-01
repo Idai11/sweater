@@ -1,3 +1,7 @@
+/*
+FILE: authValidator.js
+*/
+
 const tokenMaker = require("./tokens");
 
 const errors = require("../graphql/errors");
@@ -8,7 +12,7 @@ const userModel = require("../models/User.model");
 /*
 Validate the user from the request headers
 Return a login failed error if problem is found
-Callback with the authenticated user if succesful
+Callback with the authenticated user if successful
 */
 const validate = (req, res, callback) => {
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;

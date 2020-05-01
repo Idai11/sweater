@@ -1,3 +1,7 @@
+/*
+FILE: pot.js
+*/
+
 const errors = require("./errors");
 const potModel = require("../models/Pot.model");
 const fieldValidator = require("../misc/fieldValidator")
@@ -5,6 +9,8 @@ const fieldValidator = require("../misc/fieldValidator")
 module.exports = resolvers => {
     resolvers.Query.pot = async (root, {id}, req) => {
         const pot = await potModel.findOne({_id: id}).exec();
+
+        // If user is authed and owner of the pot
         if (req.authUser && (req.authUser.admin || req.authUser._id.equals(pot.owner._id))) {
             return pot;
         } else {
@@ -42,8 +48,11 @@ module.exports = resolvers => {
         if (fieldValidator.intValidator([moisture, light])) {
             pot = await potModel.findOne({_id: id}).exec();
             if (pot && (req.authUser.admin || pot.owner._id.equals(req.authUser._id))) {
+                // Update current moisture
                 pot.moisture = moisture;
 
+                // Store last 8 values of light
+                // If there are already 8 values, delete the first one
                 if (pot.lightHours.length >= 8) {
                     pot.lightHours.shift();
                 }
@@ -56,6 +65,8 @@ module.exports = resolvers => {
 
     resolvers.Mutation.updatePot = async (root, {id, name, imgUrl, plant, plantDate}, req) => {
         const pot = await potModel.findOne({_id: id}).exec();
+
+        // If user is authed and owner of the pot
         if (req.authUser && (req.authUser.admin || pot.owner._id.equals(req.authUser._id))) {
             const options = {
                 min_length: 1,
@@ -84,6 +95,8 @@ module.exports = resolvers => {
 
     resolvers.Mutation.deletePot = async (root, {id}, req) => {
         const pot = await potModel.findOne({_id: id}).exec();
+
+        // If user is authed and is owner of the pot
         if (req.authUser && (req.authUser.admin || req.authUser._id.equals(pot.owner._id))) {
             await pot.remove();
             return true;
