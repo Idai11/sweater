@@ -12,6 +12,7 @@ module.exports = resolvers => {
             // Return plant data for the name
             return data[name];
         } else {
+            // Else throw unauthorized error
             throw errors.unauthorized();
         }
     }

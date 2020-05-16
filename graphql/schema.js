@@ -10,6 +10,8 @@ const tokenPlug = require("./token");
 const potPlug = require("./pot");
 const plantPlug = require("./plants");
 
+// The plugs contain the functions relevant to their topics
+// userPlug contains all the functions that relate to the user model
 const plugs = [
     userPlug,
     tokenPlug,
@@ -17,6 +19,11 @@ const plugs = [
     potPlug
 ]
 
+// Below are all the functions the server is capable of executing
+// The input of the function is inside the parentheses ()
+// Output is described after the colon :
+// Exclamation mark ! means that the field is required
+// Equals = sets a default value
 const typeDefs = `
     type Query {
         # Get a list of all users
@@ -112,10 +119,15 @@ let resolvers = {
     Query: {},
     Mutation: {}
 };
+
+// The plugs are PLUGGED into a single object containing all the resolvers (functions)
 for (let plug of plugs) {
     resolvers = plug(resolvers);
 }
 
+// This function makes a GraphQL schema using the above function defenition (typeDefs)
+// and all the plugs combined (resolvers)
+// see index.js for the use of this schema
 module.exports = makeExecutableSchema({
     typeDefs,
     resolvers

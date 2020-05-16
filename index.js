@@ -2,11 +2,12 @@
 FILE: index.js
 */
 
-const express = require("express");
-const graphqlExpress = require("express-graphql");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+// External packages (see package.json)
+const express = require("express"); // HTTP request handling
+const graphqlExpress = require("express-graphql"); // GraphQL request handling
+const mongoose = require("mongoose"); // Using MongoDB database
+const bodyParser = require("body-parser"); // Parser for request body (headers for example)
+const cors = require("cors"); // Comply with CORS policy (illegal request blocker)
 
 const schema = require("./graphql/schema");
 const config = require("./misc/config");
@@ -24,9 +25,12 @@ URI_OOPSI = "mongodb://idai:hQc2kkQVWiNNeKX2@sweater-shard-00-00-3jew7.mongodb.n
 mongoose.connect(URI_OOPSI, {useNewUrlParser: true});
 
 // Pre-Request middleware
+// This happens to every request before it's passed to the other parts of the server
 app.use((req, res, next) => {
-    // Pass authUser in request object
+    // Pass the request to the validator (see authValidator.js)
     validator(req, res, authUser => {
+        // This adds the authUser value to the request, which is the user that made the request
+        // req.authUser is used in all the GraphQL Plugs (pot.js, token.js, user.js)
         req.authUser = authUser;
         next();
     });
@@ -34,9 +38,8 @@ app.use((req, res, next) => {
 
 // GraphQL Endpoint
 app.use("/graphql", graphqlExpress({
-    schema: schema,
-    graphiql: true,
-    formatError: error => {
+    schema: schema, // What schema to use to parse requests (see schema.js)
+    formatError: error => { // What to return in case of error
         const content = error.message.split("\n");
         return {
             message: content[0],
@@ -52,8 +55,9 @@ app.get("/", function(req, res) {
 
 // Catch 404s
 app.use((req, res, next) => {
-  res.status(404);
-  res.end();
+    // Return empty response with 404 code
+    res.status(404);
+    res.end();
 })
 
 // Listen on port from env

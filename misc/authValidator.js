@@ -15,8 +15,10 @@ Return a login failed error if problem is found
 Callback with the authenticated user if successful
 */
 const validate = (req, res, callback) => {
+    // Get the token from the request headers
     const token = typeof(req.headers.token) == "string" ? req.headers.token : false;
 
+    // For testing, if the token is "letmein", admin access is granted
     if (req.headers.token == "letmein") {
         callback({
             "admin": true
@@ -24,7 +26,7 @@ const validate = (req, res, callback) => {
         return;
     }
 
-    // tokenData will be false if token is not signed correctly or overdue
+    // tokenData will be false if token is not signed correctly or overdue (see tokens.js)
     const tokenData = tokenMaker.eval(token);
 
     // If token was passed, proceed to validate
