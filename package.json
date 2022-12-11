@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/Idai11/sweater#readme",
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "express-graphql": "^0.7.1",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
